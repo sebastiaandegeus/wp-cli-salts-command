@@ -12,7 +12,7 @@ class Salts_Command extends WP_CLI_Command {
    * 
    * @when before_wp_load
    *
-   * @synopsis --file=<foo>
+   * @synopsis [--file=<foo>]
    *
    */
   function generate( $args, $assoc_args ) {
