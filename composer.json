@@ -1,7 +1,7 @@
 {
   "name": "sebastiaandegeus/wp-cli-salt-command",
   "description": "Manage salts for your WordPress installation",
-  "homepage": "https://github.com/sebastiaandegeus/wp-cli-salt-command",
+  "homepage": "https://github.com/sebastiaandegeus/wp-cli-salts-command",
   "license": "MIT",
   "require": {
     "php": ">=5.4"
