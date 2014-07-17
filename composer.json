@@ -1,5 +1,5 @@
 {
-  "name": "sebastiaandegeus/wp-cli-salt-command",
+  "name": "sebastiaandegeus/wp-cli-salts-command",
   "description": "Manage salts for your WordPress installation",
   "homepage": "https://github.com/sebastiaandegeus/wp-cli-salts-command",
   "license": "MIT",
