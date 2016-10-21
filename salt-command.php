@@ -8,32 +8,60 @@
 class Salts_Command extends WP_CLI_Command {
 
   /**
-   * Generates salts to STDOUT or to a file
-   * 
-   * @when before_wp_load
+   * Generates salts to STDOUT or to a file.
    *
-   * @synopsis [--file=<foo>]
+   * ## OPTIONS
+   *
+   * [--file=<file>]
+   * : The name of the file to write to. Default outputs to STDOUT.
+   *
+   * [--format=<format>]
+   * : Can be php or env. Defaults to php.
+   *
+   * @when before_wp_load
+   * @synopsis [--file=<file>] [--format=<format>]
    *
    */
   function generate( $args, $assoc_args ) {
-    $api  = 'https://api.wordpress.org/secret-key/1.1/salt/';
-    $data = file_get_contents( $api ); 
+    $defaults = array(
+      'format' => 'php',
+    );
+    $assoc_args = array_merge( $defaults, $assoc_args );
+
+    $api    = 'https://api.wordpress.org/secret-key/1.1/salt/';
+    $data   = file_get_contents( $api );
+    $output = self::_format_data( $data, $assoc_args['format'] );
 
     if ( isset( $assoc_args['file'] ) ) {
-      $file   = $assoc_args['file'];
-      $output = '<?php' . PHP_EOL . PHP_EOL . $data . PHP_EOL;
+      $file = $assoc_args['file'];
 
       if ( ! is_writable( $file ) )
-        WP_CLI::error('File is not writable or path is not correct: ' . $file );
+        WP_CLI::error( 'File is not writable or path is not correct: ' . $file );
 
       if ( ! file_put_contents( $file, $output ) )
-        WP_CLI::error('could not write salts to: ' . $file );
+        WP_CLI::error( 'Could not write salts to: ' . $file );
 
-      WP_CLI::success('Added salts to: ' . $file );
+      WP_CLI::success( 'Added salts to: ' . $file );
       return;
     }
 
-    fwrite( STDOUT, $data );
+    fwrite( STDOUT, $output );
+  }
+
+  private static function _format_data( $data, $format ) {
+    switch ( $format ) {
+      case 'env':
+        $pattern   = "/define\('([A-Z_]+)',\s*'(.+)'\);/";
+        $formatted = "\n\n" . preg_replace($pattern, "$1='$2'", $data) . "\n";
+        break;
+
+      case 'php':
+      default:
+        $formatted = '<?php' . PHP_EOL . PHP_EOL . $data . PHP_EOL;
+        break;
+    }
+
+    return $formatted;
   }
 }
 

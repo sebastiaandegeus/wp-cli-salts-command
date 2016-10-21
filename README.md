@@ -16,3 +16,11 @@ wp salts generate --file=/absolute/path/to/file.php
 ```
 
 This will output the salts to a file. Because the file contains the complete `define()` code the salts will be set by a simple `require` somewhere in your wp-config.php
+
+## Output salts as env vars
+
+```
+wp salts generate --format=env
+```
+
+This will output the salts as shell environment variables. Useful for projects that load configurations from .env files.
